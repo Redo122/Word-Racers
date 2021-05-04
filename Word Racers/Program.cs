@@ -36,6 +36,7 @@ namespace Word_Racers
             Console.WriteLine(words.Length);
             int selectedword = rnd.Next(words.Length);
             Console.WriteLine(words[selectedword]);
+            Console.ReadKey();
         }
     }
 }
