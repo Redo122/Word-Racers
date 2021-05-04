@@ -1,3 +1,3 @@
 # Word Racers
-A typing practice game inspired by TypeRacer
+A typing practice game inspired by TypeRacer.<br>
 Coming Soon...
