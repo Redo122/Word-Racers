@@ -9,13 +9,13 @@ namespace Word_Racers
         private static System.Timers.Timer aTimer;
         static void Main(string[] args)
         {
-            string[] dirs = Directory.GetFiles(@"\Packs");
+            string[] dirs = Directory.GetFiles(@"Packs");
             string[] packs = { "", "", "", "", "", "", "", "", "", "" };
             string[] car1 = { "    ______                                 F", "       ______                              F", "          ______                           F", "             ______                        F", "                ______                     F", "                   ______                  F", "                      ______               F", "                         ______            F", "                            ______         F", "                               ______      F", "                                  ______   F" };
             string[] car2 = { "  _[|_|__|]__                              I", "     _[|_|__|]__                           I", "        _[|_|__|]__                        I", "           _[|_|__|]__                     I", "              _[|_|__|]__                  I", "                 _[|_|__|]__               I", "                    _[|_|__|]__            I", "                       _[|_|__|]__         I", "                          _[|_|__|]__      I", "                             _[|_|__|]__   I", "                                _[|_|__|]__I" };
             string[] car3 = { " |  _    _   |                             N", "    |  _    _   |                          N", "       |  _    _   |                       N", "          |  _    _   |                    N", "             |  _    _   |                 N", "                |  _    _   |              N", "                   |  _    _   |           N", "                      |  _    _   |        N", "                         |  _    _   |     N", "                            |  _    _   |  N", "                               |  _    _   |" };
             string[] car4 = { " [_(O)__(O)__] -- -- -- -- -- -- -- -- -- --", " -- [_(O)__(O)__] -- -- -- -- -- -- -- -- --", " -- -- [_(O)__(O)__] -- -- -- -- -- -- -- --", " -- -- -- [_(O)__(O)__] -- -- -- -- -- -- --", " -- -- -- -- [_(O)__(O)__] -- -- -- -- -- --", " -- -- -- -- -- [_(O)__(O)__] -- -- -- -- --", " -- -- -- -- -- -- [_(O)__(O)__] -- -- -- --", " -- -- -- -- -- -- -- [_(O)__(O)__] -- -- --", " -- -- -- -- -- -- -- -- [_(O)__(O)__] -- --", " -- -- -- -- -- -- -- -- -- [_(O)__(O)__] --", " -- -- -- -- -- -- -- -- -- -- [_(O)__(O)__]" };
-            string selectedpack, input, pb = @"C:\Word Racers\PB.txt", name;
+            string selectedpack, input, pb = @"PB.txt", name;
             string[] pbdata = File.ReadAllLines(pb);
             int countpoint = 0, score = 0, errors = 0, time = 0, pberror = Convert.ToInt32(pbdata[1]), pbtime = Convert.ToInt32(pbdata[0]);
             string pbname = pbdata[3], pbpack = pbdata[2];
