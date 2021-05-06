@@ -1,10 +1,12 @@
 ﻿using System;
 using System.IO;
+using System.Timers;
 
 namespace Word_Racers
 {
     class Program
     {
+        private static System.Timers.Timer aTimer;
         static void Main(string[] args)
         {
             string[] dirs = Directory.GetFiles(@"\Packs");
@@ -13,9 +15,13 @@ namespace Word_Racers
             string[] car2 = { "  _[|_|__|]__                              I", "     _[|_|__|]__                           I", "        _[|_|__|]__                        I", "           _[|_|__|]__                     I", "              _[|_|__|]__                  I", "                 _[|_|__|]__               I", "                    _[|_|__|]__            I", "                       _[|_|__|]__         I", "                          _[|_|__|]__      I", "                             _[|_|__|]__   I", "                                _[|_|__|]__I" };
             string[] car3 = { " |  _    _   |                             N", "    |  _    _   |                          N", "       |  _    _   |                       N", "          |  _    _   |                    N", "             |  _    _   |                 N", "                |  _    _   |              N", "                   |  _    _   |           N", "                      |  _    _   |        N", "                         |  _    _   |     N", "                            |  _    _   |  N", "                               |  _    _   |" };
             string[] car4 = { " [_(O)__(O)__] -- -- -- -- -- -- -- -- -- --", " -- [_(O)__(O)__] -- -- -- -- -- -- -- -- --", " -- -- [_(O)__(O)__] -- -- -- -- -- -- -- --", " -- -- -- [_(O)__(O)__] -- -- -- -- -- -- --", " -- -- -- -- [_(O)__(O)__] -- -- -- -- -- --", " -- -- -- -- -- [_(O)__(O)__] -- -- -- -- --", " -- -- -- -- -- -- [_(O)__(O)__] -- -- -- --", " -- -- -- -- -- -- -- [_(O)__(O)__] -- -- --", " -- -- -- -- -- -- -- -- [_(O)__(O)__] -- --", " -- -- -- -- -- -- -- -- -- [_(O)__(O)__] --", " -- -- -- -- -- -- -- -- -- -- [_(O)__(O)__]" };
-            string selectedpack, input;
-            int countpoint = 0, score = 0, errors = 0;
+            string selectedpack, input, pb = @"C:\Word Racers\PB.txt", name;
+            string[] pbdata = File.ReadAllLines(pb);
+            int countpoint = 0, score = 0, errors = 0, time = 0, pberror = Convert.ToInt32(pbdata[1]), pbtime = Convert.ToInt32(pbdata[0]);
+            string pbname = pbdata[3], pbpack = pbdata[2];
             Random rnd = new Random();
+            aTimer = new System.Timers.Timer(1000);
+            aTimer.Elapsed += OnTimedEvent;
             Console.WriteLine("╔═╗  ╔══╗  ╔═╗╔═════╗╔═════╗╔═════╗   ╔═════╗╔═════╗╔═════╗╔═════╗╔═════╗╔══════╗\n" +
                               "║ ║ ╔╝  ╚╗ ║ ║║ ╔═╗ ║║ ╔═╗ ║╚╗ ╔╗ ║   ║ ╔═╗ ║║ ╔═╗ ║║ ╔═══╝║ ╔═══╝║ ╔═╗ ║║ ╔════╝\n" +
                               "║ ║╔╝ ╔╗ ╚╗║ ║║ ║ ║ ║║ ╚═╝ ║ ║ ║║ ║   ║ ╚═╝ ║║ ║ ║ ║║ ║    ║ ╚══╗ ║ ╚═╝ ║║ ╚════╗\n" +
@@ -23,7 +29,7 @@ namespace Word_Racers
                               "╚╗  ╔╝  ╚╗  ╔╝║ ╚═╝ ║║ ║║ ╚╗╔╝ ╚╝ ║   ║ ║║ ╚╗║ ╔═╗ ║║ ╚═══╗║ ╚═══╗║ ║║ ╚╗╔════╝ ║\n" +
                               " ╚══╝    ╚══╝ ╚═════╝╚═╝╚══╝╚═════╝   ╚═╝╚══╝╚═╝ ╚═╝╚═════╝╚═════╝╚═╝╚══╝╚══════╝\n" +
                               "v1\n" +
-                              "DEVELOPMENT BUILD\n" +
+                              "PB: " + pbname + " with " + pbtime + " seconds and " + pberror + " mistakes, on " + pbpack + ".\n" +
                               "Select a word pack:");
             Console.WriteLine(dirs.Length + " packs found:");
             foreach (string dir in dirs)
@@ -35,15 +41,32 @@ namespace Word_Racers
             int selected = Convert.ToInt16(Console.ReadLine());
             selectedpack = packs[selected - 1];
             string[] words = File.ReadAllLines(selectedpack);
+            aTimer.Enabled = true;
             while (score < 11)
             {
                 Console.Clear();
                 int selectedword = rnd.Next(words.Length);
-                Console.WriteLine(words[selectedword] + Environment.NewLine + car1[score] + Environment.NewLine + car2[score] + Environment.NewLine + car3[score] + Environment.NewLine + car4[score]);
-                Console.Write(Environment.NewLine + "                                            " + score + "/10\n");
+                Console.WriteLine(words[selectedword] + "\n" + car1[score] + "\n" + car2[score] + "\n" + car3[score] + "\n" + car4[score]);
+                Console.Write("                                            " + time + " seconds\n                                            " + score + "/10\n");
                 if (score == 10)
                 {
-                    Console.WriteLine("You Win with " + errors + " mistakes!\nPress any key to exit.");
+                    if (errors <= pberror)
+                    {
+                        if (time < pbtime)
+                        {
+                            Console.WriteLine("NEW PB!\n" +
+                                              "You Win in " + time + " seconds with " + errors + " mistakes!\n" +
+                                              "Please enter your name:");
+                            name = Console.ReadLine();
+                            File.WriteAllText(pb, Convert.ToString(time) + "\n" + Convert.ToString(errors) + "\n" + selectedpack + "\n" + name);
+                            Console.WriteLine("Thank you, press any key to exit.");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("You Win in " + time + " seconds with " + errors + " mistakes!\n" +
+                                          "Press any key to exit.");
+                    }
                     Console.ReadKey();
                     Environment.Exit(0);
                 }
@@ -54,6 +77,10 @@ namespace Word_Racers
                     score = score + 1;
                     errors = errors - 1;
                 }
+            }
+            void OnTimedEvent(Object source, ElapsedEventArgs e)
+            {
+                time = time + 1;
             }
         }
     }
